@@ -47,6 +47,7 @@ const req = http.request(options, function (res) {
     }
     else{
       response.write("<h1>The stock price is between " + lowerLimit.toString() + " and " + upperLimit.toString() + "!</h1>");
+      response.write("<h2>The current price is " + stockPrice.toString());
     }
     response.send();
 	});
