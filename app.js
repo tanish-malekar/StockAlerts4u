@@ -41,12 +41,12 @@ const req = http.request(options, function (res) {
       response.write("<h1>The stock price is greater than " + upperLimit.toString() + "!</h1>");
       response.write("<h2>The current price is " + stockPrice.toString());
     }
-    else if(stockPrice<upperLimit){
-      response.write("<h1>The stock price is less than " + upperLimit.toString() + "!</h1>");
+    else if(stockPrice<lowerLimit){
+      response.write("<h1>The stock price is less than " + lowerLimit.toString() + "!</h1>");
       response.write("<h2>The current price is " + stockPrice.toString());
     }
     else{
-      response.write("<h1>The stock price is exactly equal to " + lowerLimit.toString() + "!</h1>");
+      response.write("<h1>The stock price is between " + lowerLimit.toString() + "and " + upperLimit.toString() + "!</h1>");
     }
     response.send();
 	});
