@@ -113,11 +113,11 @@ function checkPrices(currentUser){
           data = JSON.parse(data);
           let stockPrice = Number(data.quoteResponse.result[0].regularMarketPrice);
           if(stockPrice>currentUser.upperLimit){
-            sendEmail("greater than", currentUser.email, currentUser.upperLimit, currentUser.stockSymbol);
+            sendEmail("greater than", currentUser.email, currentUser.upperLimit, currentUser.stockSymbol, stockPrice);
             removeDB(currentUser);
           }
           else if(stockPrice<currentUser.lowerLimit){
-            sendEmail("less than", currentUser.email, currentUser.lowerLimit, currentUser.stockSymbol);
+            sendEmail("less than", currentUser.email, currentUser.lowerLimit, currentUser.stockSymbol, stockPrice);
             removeDB(currentUser);
           }
         });
@@ -128,8 +128,8 @@ function checkPrices(currentUser){
 
 
 
-function sendEmail(condition, email, limit, symbol){
-  emailContent = "The price of " + symbol + " has become " + condition + " " + limit.toString() + "!";
+function sendEmail(condition, email, limit, symbol, stockPrice){
+  emailContent = "The price of " + symbol + " has become " + condition + " " + limit.toString() + "! " + "The current price is " + stockPrice.toString() + "! Thankyou for using our service.";
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
