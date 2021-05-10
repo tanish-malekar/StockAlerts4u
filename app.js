@@ -54,7 +54,7 @@ app.post('/', function (request, response) {
   let email = request.body.email;
   let userEntry = new UserEntry(email, stockSymbol, upperLimit, lowerLimit);
   addDB(userEntry);
-  response.send("<h1>Your request has been enabled!</h1>");
+  response.sendFile(__dirname + '/success.html');
 })
 
 app.listen(port, () => {
