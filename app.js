@@ -5,6 +5,7 @@ const http = require("https");
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 const mongoose = require('mongoose');
 mongoose.connect("mongodb+srv://tanish_malekar:Tanman%23123@cluster0.kdiax.mongodb.net/stockAlertDB", {useNewUrlParser: true, useUnifiedTopology: true});
 
