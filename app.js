@@ -93,8 +93,8 @@ function removeDB(userEntry){
 function checkPrices(currentUser){
     const options = {
     "method": "GET",
-    "hostname": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-    "path": "/market/v2/get-quotes?region=IN&symbols=" + currentUser.stockSymbol,
+    "url": 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
+    "params": {region: 'IN', symbols: currentUser.stockSymbol},
     "headers": {
       "x-rapidapi-key": "28658525b3msh9d3c6d7e29ddef1p1f0d50jsn863b38cfd82e",
       "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
