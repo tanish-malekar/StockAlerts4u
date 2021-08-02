@@ -63,6 +63,7 @@ app.listen(port, () => {
 })
 
 function addDB(userEntry){
+  console.log("adding");
   let data = new Data({
     email: userEntry.email,
     stockSymbol: userEntry.stockSymbol,
