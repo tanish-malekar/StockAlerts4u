@@ -151,7 +151,9 @@ function checkPrices(currentUser){
 function sendEmail(condition, email, limit, symbol, stockPrice){
   emailContent = "The price of " + symbol + " has become " + condition + " " + limit.toString() + "! " + "The current price is " + stockPrice.toString() + "! Thankyou for using our service.";
   var transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+   port: 465,
+   secure: true,
     auth: {
       user: 'stockalerts66@gmail.com',
       pass: 'Tanman#123'
