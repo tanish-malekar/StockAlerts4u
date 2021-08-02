@@ -99,7 +99,7 @@ function checkPrices(currentUser){
       params: {region: 'IN', symbols: currentUser.stockSymbol},
       headers: {
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        "x-rapidapi-key": "28658525b3msh9d3c6d7e29ddef1p1f0d50jsn863b38cfd82e",
+        "x-rapidapi-key": "1baf8f3028mshe9246c7003f6b28p174216jsn06dc0568981d",
         "useQueryString": true}
     };
 
