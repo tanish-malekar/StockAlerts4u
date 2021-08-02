@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000
 const http = require("https");
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const axios = require("axios").default;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 const mongoose = require('mongoose');
@@ -91,40 +92,57 @@ function removeDB(userEntry){
 
 
 function checkPrices(currentUser){
-    const options = {
-    "method": "GET",
-    "url": 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
-    "params": {region: 'IN', symbols: currentUser.stockSymbol},
-    "headers": {
-      "x-rapidapi-key": "28658525b3msh9d3c6d7e29ddef1p1f0d50jsn863b38cfd82e",
-      "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-      "useQueryString": true
-    }
+
+    var options = {
+      method: 'GET',
+      url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
+      params: {region: 'IN', symbols: currentUser.stockSymbol},
+      headers: {
+        'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
+        "x-rapidapi-key": "28658525b3msh9d3c6d7e29ddef1p1f0d50jsn863b38cfd82e",
+        "useQueryString": true}
     };
 
-    const req = http.request(options, function (res) {
-        const chunks = [];
+    axios.request(options).then(function (res) {
+	     console.log(res.data.quoteResponse.result[0].regularMarketPrice);
+       let stockPrice = res.data.quoteResponse.result[0].regularMarketPrice;
+       console.log(currentUser.upperLimit);
+             if(stockPrice>currentUser.upperLimit){
+               console.log("sending email");
+               sendEmail("greater than", currentUser.email, currentUser.upperLimit, currentUser.stockSymbol, stockPrice);
+               removeDB(currentUser);
+             }
+             else if(stockPrice<currentUser.lowerLimit){
+               sendEmail("less than", currentUser.email, currentUser.lowerLimit, currentUser.stockSymbol, stockPrice);
+               removeDB(currentUser);
+             }
+    }).catch(function (error) {
+	      console.error(error);
+      });
 
-        res.on("data", function (chunk) {
-          chunks.push(chunk);
-        });
+    // const req = http.request(options, function (res) {
+    //     const chunks = [];
+    //
+    //     res.on("data", function (chunk) {
+    //       chunks.push(chunk);
+    //     });
+    //
+    //     res.on("end", function () {
+    //       let data = Buffer.concat(chunks);
+    //       data = JSON.parse(data);
+    //       let stockPrice = Number(data.quoteResponse.result[0].regularMarketPrice);
+    //       if(stockPrice>currentUser.upperLimit){
+    //         sendEmail("greater than", currentUser.email, currentUser.upperLimit, currentUser.stockSymbol, stockPrice);
+    //         removeDB(currentUser);
+    //       }
+    //       else if(stockPrice<currentUser.lowerLimit){
+    //         sendEmail("less than", currentUser.email, currentUser.lowerLimit, currentUser.stockSymbol, stockPrice);
+    //         removeDB(currentUser);
+    //       }
+    //     });
+    // });
 
-        res.on("end", function () {
-          let data = Buffer.concat(chunks);
-          data = JSON.parse(data);
-          let stockPrice = Number(data.quoteResponse.result[0].regularMarketPrice);
-          if(stockPrice>currentUser.upperLimit){
-            sendEmail("greater than", currentUser.email, currentUser.upperLimit, currentUser.stockSymbol, stockPrice);
-            removeDB(currentUser);
-          }
-          else if(stockPrice<currentUser.lowerLimit){
-            sendEmail("less than", currentUser.email, currentUser.lowerLimit, currentUser.stockSymbol, stockPrice);
-            removeDB(currentUser);
-          }
-        });
-    });
 
-    req.end();
 }
 
 
